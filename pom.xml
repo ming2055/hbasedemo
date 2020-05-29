@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>BigData</groupId>
+    <artifactId>BigData</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <properties>
+        <argLine>-Dfile.encoding=UTF-8</argLine>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.hbase.util.HBaseUtil</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!-- 拷贝依赖的jar包到lib目录 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/lib
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--方式1-->
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <protocExecutable>D:\protoc\protoc.exe</protocExecutable>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--方式二-->
+            <!--<plugin>-->
+                <!--<groupId>org.xolstice.maven.plugins</groupId>-->
+                <!--<artifactId>protobuf-maven-plugin</artifactId>-->
+                <!--<version>0.6.1</version>-->
+                <!--<extensions>true</extensions>-->
+                <!--<configuration>-->
+                    <!--<protocExecutable>D:\protoc\protoc.exe</protocExecutable>-->
+                    <!--&lt;!&ndash;默认值&ndash;&gt;-->
+                    <!--<protoSourceRoot>${project.basedir}/src/main/proto</protoSourceRoot>-->
+                    <!--&lt;!&ndash;默认值&ndash;&gt;-->
+                    <!--&lt;!&ndash;<outputDirectory>${project.build.directory}/generated-sources/protobuf/java</outputDirectory>&ndash;&gt;-->
+                    <!--<outputDirectory>${project.build.sourceDirectory}</outputDirectory>-->
+                    <!--&lt;!&ndash;设置是否在生成java文件之前清空outputDirectory的文件，默认值为true，设置为false时也会覆盖同名文件&ndash;&gt;-->
+                    <!--<clearOutputDirectory>false</clearOutputDirectory>-->
+                    <!--&lt;!&ndash;默认值&ndash;&gt;-->
+                    <!--<temporaryProtoFileDirectory>${project.build.directory}/protoc-dependencies</temporaryProtoFileDirectory>-->
+                    <!--&lt;!&ndash;更多配置信息可以查看https://www.xolstice.org/protobuf-maven-plugin/compile-mojo.html&ndash;&gt;-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>compile</goal>-->
+                        <!--</goals>-->
+                        <!--&lt;!&ndash;也可以设置成局部变量，执行compile或test-compile时才执行&ndash;&gt;-->
+                        <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<protoSourceRoot>${project.basedir}/src/main/proto</protoSourceRoot>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<outputDirectory>${project.build.directory}/generated-sources/protobuf/java</outputDirectory>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<temporaryProtoFileDirectory>${project.build.directory}/protoc-dependencies</temporaryProtoFileDirectory>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>cloudera</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+        </repository>
+        <repository>
+            <id>maven</id>
+            <url>http://central.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>alimaven</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>bintraytypesafemavenreleases</id>
+            <name>bintray-typesafe-maven-releases</name>
+            <url>https://dl.bintray.com/typesafe/maven-releases/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-hdfs</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-maven-plugins</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-common</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-protocol</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-server</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-server-nodemanager</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-common</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-mapreduce-client-app</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-mapreduce-client-common</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-mapreduce-client-core</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-api</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-client</artifactId>
+            <version>2.6.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-exec</artifactId>
+            <version>1.1.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-common</artifactId>
+            <version>1.1.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-jdbc</artifactId>
+            <version>1.1.0-cdh5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flume</groupId>
+            <artifactId>flume-ng-core</artifactId>
+            <version>1.6.0-cdh5.14.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flume.flume-ng-sources</groupId>
+            <artifactId>flume-kafka-source</artifactId>
+            <version>1.6.0-cdh5.14.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.hive/hive-metastore -->
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-metastore</artifactId>
+            <version>1.1.0-cdh5.14.0</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.mrunit</groupId>
+            <artifactId>mrunit</artifactId>
+            <version>1.1.0</version>
+            <classifier>hadoop2</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.11</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.11</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-hive -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-hive_2.11</artifactId>
+            <version>1.6.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.11</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-streams</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.typesafe.scala-logging/scala-logging -->
+        <!--<dependency>-->
+        <!--<groupId>com.typesafe.scala-logging</groupId>-->
+        <!--<artifactId>scala-logging_2.11</artifactId>-->
+        <!--<version>3.1.0</version>-->
+        <!--</dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.scala-lang/scala-library -->
+        <!--<dependency>-->
+        <!--<groupId>org.scala-lang</groupId>-->
+        <!--<artifactId>scala-library</artifactId>-->
+        <!--<version>2.11.8</version>-->
+        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.scala-lang.modules/scala-parser-combinators -->
+        <!--<dependency>-->
+        <!--<groupId>org.scala-lang.modules</groupId>-->
+        <!--<artifactId>scala-parser-combinators_2.11</artifactId>-->
+        <!--<version>1.0.4</version>-->
+        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/net.sf.jopt-simple/jopt-simple -->
+        <dependency>
+            <groupId>net.sf.jopt-simple</groupId>
+            <artifactId>jopt-simple</artifactId>
+            <version>3.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.scala-lang/scala-reflect -->
+        <!--<dependency>-->
+        <!--<groupId>org.scala-lang</groupId>-->
+        <!--<artifactId>scala-reflect</artifactId>-->
+        <!--<version>2.11.8</version>-->
+        <!--</dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.xerial.snappy/snappy-java -->
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>1.1.7</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.6</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.101tec/zkclient -->
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.3</version>
+        </dependency>
+
+        <!--<dependency>-->
+        <!--<groupId>jdk.tools</groupId>-->
+        <!--<artifactId>jdk.tools</artifactId>-->
+        <!--<version>1.8</version>-->
+        <!--<scope>system</scope>-->
+        <!--<systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>-->
+        <!--</dependency>-->
+
+
+        <!--pyspark  to hbase need jar-->
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-examples -->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.spark</groupId>-->
+        <!--<artifactId>spark-examples_2.11</artifactId>-->
+        <!--<version>1.6.0-typesafe-001</version>-->
+        <!--</dependency>-->
+
+
+        <!--  Gson: Java to Json conversion -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!--elasticsearch 8.0可能会删除transport-->
+        <!--<dependency>-->
+            <!--<groupId>org.elasticsearch.client</groupId>-->
+            <!--<artifactId>transport</artifactId>-->
+            <!--<version>7.2.0</version>-->
+        <!--</dependency>-->
+
+        <!--rest-high-level-->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>7.1.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.elasticsearch.client/elasticsearch-rest-client -->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-client</artifactId>
+            <version>7.1.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch -->
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>7.1.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.11.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.11.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.9</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.11</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
